@@ -1,0 +1,29 @@
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+
+#machines {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 20px;
+}
+
+.machine {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.machine:hover {
+  transform: scale(1.05);
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+}
