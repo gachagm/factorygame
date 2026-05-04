@@ -89,7 +89,13 @@ for (let i = 0; i < 60; i++) {
     name: names[i],
     produces: i % 3 === 0 ? "iron" : i % 3 === 1 ? "copper" : "steel",
     rate: (i + 1) * 0.5,
-    cost: Math.floor((i + 1) * 12.5)
+
+    // 🔥 EINZIGE ÄNDERUNG: Kosten jetzt gemischt
+    cost: {
+      iron: Math.floor((i + 1) * 10),
+      copper: i > 5 ? Math.floor((i + 1) * 5) : 0,
+      steel: i > 15 ? Math.floor((i + 1) * 2) : 0
+    }
   });
 }
 
@@ -126,7 +132,7 @@ function renderMachines() {
         <p>Rate: ${m.rate}/s</p>
         <p>Owned: ${game.machines[m.id]}</p>
         <button onclick="buyMachine('${m.id}')">
-          Buy (${m.cost} iron)
+          Buy (${m.cost.iron} iron, ${m.cost.copper} copper, ${m.cost.steel} steel)
         </button>
       </div>
     `;
@@ -140,8 +146,15 @@ function renderMachines() {
 function buyMachine(id) {
   const m = machineList.find(x => x.id === id);
 
-  if (game.resources.iron >= m.cost) {
-    game.resources.iron -= m.cost;
+  if (
+    game.resources.iron >= m.cost.iron &&
+    game.resources.copper >= m.cost.copper &&
+    game.resources.steel >= m.cost.steel
+  ) {
+    game.resources.iron -= m.cost.iron;
+    game.resources.copper -= m.cost.copper;
+    game.resources.steel -= m.cost.steel;
+
     game.machines[id]++;
 
     saveGame();
