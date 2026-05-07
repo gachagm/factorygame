@@ -8,7 +8,10 @@ let game = {
   resources: {
     iron: 100,
     copper: 0,
-    steel: 0
+    steel: 0,
+    titanium: 0,
+    plasma: 0,
+    quantum: 0
   },
   machines: {},
   lastTime: Date.now()
@@ -80,21 +83,108 @@ const names = [
   "Omega Plasma Nexus",
   "Void Industrial Godcore",
   "Quantum Forge Infinity",
-  "Neon Singularity Engine"
+  "Neon Singularity Engine",
+  [
+  "Plasma Rift Generator",
+  "Titan Core Refinery",
+  "Nano Flux Compressor",
+  "Solarium Reactor Matrix",
+  "Iron Nova Extractor",
+  "Quantum Steel Crucible",
+  "Cryo Pulse Refinery",
+  "Omega Alloy Fabricator",
+  "Stellar Core Harvester",
+  "Photon Ore Synthesizer",
+  "Darkmatter Smeltery",
+  "Fusion Grid Extractor",
+  "Voidsteel Catalyst",
+  "Inferno Crystal Reactor",
+  "Arcadium Forge Unit",
+  "Hyperion Smelter Prime",
+  "Electro Core Infuser",
+  "Nano Plasma Press",
+  "Astral Iron Reactor",
+  "Cyberium Refinery",
+  "Eclipse Ore Converter",
+  "Gravity Flux Smelter",
+  "Plasma Crystal Matrix",
+  "Neon Titan Extractor",
+  "Ionsteel Harvester",
+  "Pulsecore Generator",
+  "Solar Flux Forge",
+  "Quantum Ember Refinery",
+  "Void Pulse Reactor",
+  "Cryonite Alloy Press",
+  "Titanwave Smelter",
+  "Hypercore Fabricator",
+  "Omega Crystal Extractor",
+  "Photonsteel Infuser",
+  "Nova Alloy Reactor",
+  "Arc Pulse Harvester",
+  "Cyber Nova Crucible",
+  "Darksteel Generator",
+  "Stellar Flux Press",
+  "Plasma Core Distillery",
+  "Infernal Ore Extractor",
+  "Nano Rift Smelter",
+  "Quantum Blaze Infuser",
+  "Astrosteel Refinery",
+  "Neon Core Synthesizer",
+  "Eclipse Alloy Matrix",
+  "Hyper Plasma Reactor",
+  "Cryo Nova Press",
+  "Titan Crystal Forge",
+  "Voidforge Extractor",
+  "Electrosteel Harvester",
+  "Solarion Smelter",
+  "Fluxcore Infuser",
+  "Omega Rift Reactor",
+  "Arcsteel Refinery",
+  "Photon Pulse Generator",
+  "Nova Crystal Press",
+  "Cyber Flux Fabricator",
+  "Astral Pulse Extractor",
+  "Darkmatter Alloy Forge"
+]
 ];
 
 for (let i = 0; i < 60; i++) {
+  const level = i + 1;
+
   machineList.push({
-    id: "mnx_" + (i + 1),
+    id: "mnx_" + level,
     name: names[i],
     produces: i % 3 === 0 ? "iron" : i % 3 === 1 ? "copper" : "steel",
-    rate: (i + 1) * 0.5,
+    rate: level * 0.5,
 
-    // 🔥 EINZIGE ÄNDERUNG: Kosten jetzt gemischt
+    // 🔥 TEURERE PREISE + 3 NEUE RESSOURCEN
     cost: {
-      iron: Math.floor((i + 1) * 10),
-      copper: i > 5 ? Math.floor((i + 1) * 5) : 0,
-      steel: i > 15 ? Math.floor((i + 1) * 2) : 0
+      iron: Math.floor(100 * Math.pow(1.45, level)),
+
+      copper:
+        level > 5
+          ? Math.floor(75 * Math.pow(1.42, level))
+          : 0,
+
+      steel:
+        level > 12
+          ? Math.floor(50 * Math.pow(1.4, level))
+          : 0,
+
+      titanium:
+        level > 20
+          ? Math.floor(25 * Math.pow(1.38, level))
+          : 0,
+
+      plasma:
+        level > 30
+          ? Math.floor(10 * Math.pow(1.36, level))
+          : 0,
+
+      quantum:
+        level > 45
+          ? Math.floor(5 * Math.pow(1.34, level))
+          : 0
     }
   });
 }
@@ -132,7 +222,14 @@ function renderMachines() {
         <p>Rate: ${m.rate}/s</p>
         <p>Owned: ${game.machines[m.id]}</p>
         <button onclick="buyMachine('${m.id}')">
-          Buy (${m.cost.iron} iron, ${m.cost.copper} copper, ${m.cost.steel} steel)
+          Buy (
+            ${m.cost.iron} iron,
+            ${m.cost.copper} copper,
+            ${m.cost.steel} steel,
+            ${m.cost.titanium} titanium,
+            ${m.cost.plasma} plasma,
+            ${m.cost.quantum} quantum
+          )
         </button>
       </div>
     `;
@@ -149,11 +246,17 @@ function buyMachine(id) {
   if (
     game.resources.iron >= m.cost.iron &&
     game.resources.copper >= m.cost.copper &&
-    game.resources.steel >= m.cost.steel
+    game.resources.steel >= m.cost.steel &&
+    game.resources.titanium >= m.cost.titanium &&
+    game.resources.plasma >= m.cost.plasma &&
+    game.resources.quantum >= m.cost.quantum
   ) {
     game.resources.iron -= m.cost.iron;
     game.resources.copper -= m.cost.copper;
     game.resources.steel -= m.cost.steel;
+    game.resources.titanium -= m.cost.titanium;
+    game.resources.plasma -= m.cost.plasma;
+    game.resources.quantum -= m.cost.quantum;
 
     game.machines[id]++;
 
